@@ -20,26 +20,34 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static('uploads'));
-
 app.use('/uploads', express.static('uploads'));
-
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 
-//Base Route
-app.get('/', function (req, res) {
+// Base Route
+app.get('/', (req, res) => {
     res.send('hello world');
 });
 
-mongoose
-    .connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
+async function connectToMongoDB() {
+    try {
+        await mongoose.connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('MongoDB Connected Successfully');
-        return app.listen({ port: port });
-    })
-    .then(() => {
-        console.log(`🚀 Server ready at http://localhost:${port}`);
-    })
-    .catch((e) => console.log(e));
+    } catch (error) {
+        console.error('MongoDB Connection Error:', error);
+    }
+}
+
+async function startServer() {
+    try {
+        await connectToMongoDB();
+        app.listen(port, () => {
+            console.log(`🚀 Server ready at http://localhost:${port}`);
+        });
+    } catch (error) {
+        console.error('Error starting the server:', error);
+    }
+}
+
+startServer();

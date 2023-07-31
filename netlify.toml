@@ -1,0 +1,8 @@
+[build]
+  command = "Node.js server" # Replace this with the command to build your application
+  publish = "C:\Users\YASH\Downloads\make-stories-master\mern-guvi-task\backend" # Replace this with the path to the folder where your Node.js application is built
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
